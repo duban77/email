@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexFlow — El futuro del trabajo está aquí</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0a0f;
+      --cream: #f5f3ee;
+      --accent: #5b3fff;
+      --accent-light: #ede9ff;
+      --accent-mid: #8b72ff;
+      --muted: #6b6b80;
+      --border: rgba(10,10,15,0.1);
+      --white: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(245,243,238,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.4rem;
+      color: var(--ink); text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.875rem; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      font-size: 0.875rem; font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      background: var(--ink); color: var(--cream);
+      border-radius: 100px; text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.8; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      gap: 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 100px;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+      position: relative;
+    }
+    h1 em::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: underline-reveal 0.8s 0.6s ease forwards;
+    }
+    @keyframes underline-reveal { to { transform: scaleX(1); } }
+
+    .hero-desc {
+      font-size: 1.1rem; line-height: 1.7;
+      color: var(--muted); max-width: 480px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* SUBSCRIPTION FORM */
+    .subscribe-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(91,63,255,0.08);
+    }
+    .subscribe-label {
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--muted); letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 1rem;
+      display: block;
+    }
+    .input-row {
+      display: flex; gap: 0.75rem;
+    }
+    .email-input {
+      flex: 1;
+      padding: 0.85rem 1.2rem;
+      border: 1.5px solid var(--border);
+      border-radius: 0.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      background: var(--cream);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .email-input::placeholder { color: #b0afc5; }
+    .email-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(91,63,255,0.12);
+    }
+    .submit-btn {
+      padding: 0.85rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .submit-btn:hover { background: #4a2ef0; transform: translateY(-1px); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .form-note {
+      font-size: 0.78rem; color: var(--muted);
+      margin-top: 0.85rem;
+    }
+    .form-note svg { vertical-align: -2px; margin-right: 4px; }
+
+    .status-msg {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.65rem;
+      font-size: 0.875rem; font-weight: 500;
+      display: none;
+    }
+    .status-msg.success {
+      background: #eafaf1; color: #1a7f45;
+      border: 1px solid #a6e8c0;
+      display: block;
+    }
+    .status-msg.error {
+      background: #fef2f2; color: #c0392b;
+      border: 1px solid #fca5a5;
+      display: block;
+    }
+
+    /* SOCIAL PROOF */
+    .social-proof {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    .avatars {
+      display: flex;
+    }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid var(--cream);
+      background: var(--accent-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 700; color: #fff;
+      margin-left: -8px;
+    }
+    .avatar:first-child { margin-left: 0; }
+    .avatar:nth-child(2) { background: #ff6b8a; }
+    .avatar:nth-child(3) { background: #00c9a7; }
+    .avatar:nth-child(4) { background: #ffa94d; }
+    .social-text { font-size: 0.82rem; color: var(--muted); }
+    .social-text strong { color: var(--ink); }
+
+    /* HERO VISUAL */
+    .hero-visual {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dashboard-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      width: 100%;
+      box-shadow: 0 30px 80px rgba(91,63,255,0.12);
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .card-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--accent-light);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; }
+    .card-sub { font-size: 0.75rem; color: var(--muted); }
+
+    .metric-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+    .metric {
+      background: var(--cream);
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+    }
+    .metric-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--ink); }
+    .metric-lbl { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+    .metric-delta { font-size: 0.7rem; color: #16a34a; font-weight: 600; }
+
+    .chart-bars {
+      display: flex; align-items: flex-end; gap: 6px;
+      height: 80px; margin-bottom: 0.5rem;
+    }
+    .bar {
+      flex: 1; border-radius: 4px 4px 0 0;
+      background: var(--accent-light);
+      transition: background 0.2s;
+    }
+    .bar.active { background: var(--accent); }
+    .bar:hover { background: var(--accent-mid); cursor: pointer; }
+
+    .tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .tag {
+      padding: 0.25rem 0.65rem;
+      border-radius: 100px;
+      font-size: 0.72rem; font-weight: 600;
+      background: var(--accent-light); color: var(--accent);
+    }
+    .tag.green { background: #eafaf1; color: #1a7f45; }
+    .tag.orange { background: #fff7ed; color: #c2520a; }
+
+    /* FEATURES */
+    .features {
+      max-width: 1200px; margin: 6rem auto;
+      padding: 0 3rem;
+    }
+    .section-label {
+      text-align: center;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.025em;
+      text-align: center; margin-bottom: 3.5rem; line-height: 1.15;
+    }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(91,63,255,0.1);
+    }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--accent-light); color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 1rem;
+    }
+    .feature-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.82rem; color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; gap: 3rem; }
+      .hero-visual { order: -1; }
+      .features { padding: 0 1.5rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .input-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Nex<span>Flow</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Producto</a></li>
+    <li><a href="#features">Precios</a></li>
+    <li><a href="#">Blog</a></li>
+  </ul>
+  <a href="#subscribe" class="nav-cta">Empezar gratis</a>
+</nav>
+
+<main>
+  <section class="hero">
+    <!-- LEFT: Copy + Form -->
+    <div>
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Ahora en Beta pública
+      </div>
+
+      <h1>Automatiza tu flujo.<br>Escala sin <em>límites</em>.</h1>
+
+      <p class="hero-desc">
+        NexFlow conecta tus herramientas, equipos y datos en un solo lugar. 
+        Desde startups hasta empresas — trabaja más rápido con IA integrada.
+      </p>
+
+      <div class="subscribe-box" id="subscribe">
+        <span class="subscribe-label">Únete a más de 4,200 equipos en lista de espera</span>
+        <form id="sub-form" novalidate>
+          <div class="input-row">
+            <input
+              type="email"
+              id="email-input"
+              class="email-input"
+              placeholder="tu@empresa.com"
+              required
+              autocomplete="email"
+            />
+            <button type="submit" class="submit-btn" id="submit-btn">
+              Suscribirme →
+            </button>
+          </div>
+          <p class="form-note">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Sin spam. Cancela cuando quieras. 100% gratis.
+          </p>
+          <div class="status-msg" id="status-msg"></div>
+        </form>
+      </div>
+
+      <div class="social-proof">
+        <div class="avatars">
+          <div class="avatar">JR</div>
+          <div class="avatar">MS</div>
+          <div class="avatar">KL</div>
+          <div class="avatar">+</div>
+        </div>
+        <p class="social-text"><strong>4,200+ equipos</strong> ya están en lista de espera</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: Dashboard visual -->
+    <div class="hero-visual">
+      <div class="dashboard-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5b3fff" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <div>
+            <div class="card-title">NexFlow Dashboard</div>
+            <div class="card-sub">Resumen de esta semana</div>
+          </div>
+        </div>
+
+        <div class="metric-row">
+          <div class="metric">
+            <div class="metric-val">98%</div>
+            <div class="metric-lbl">Uptime</div>
+            <div class="metric-delta">▲ estable</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">2.4k</div>
+            <div class="metric-lbl">Tareas auto.</div>
+            <div class="metric-delta">▲ +18%</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val">12h</div>
+            <div class="metric-lbl">Tiempo ahorrado</div>
+            <div class="metric-delta">esta semana</div>
+          </div>
+        </div>
+
+        <div class="chart-bars">
+          <div class="bar" style="height:40%"></div>
+          <div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:45%"></div>
+          <div class="bar" style="height:70%"></div>
+          <div class="bar" style="height:60%"></div>
+          <div class="bar active" style="height:90%"></div>
+          <div class="bar" style="height:75%"></div>
+        </div>
+
+        <div class="tag-row">
+          <span class="tag">Automatización IA</span>
+          <span class="tag green">✓ Sincronizado</span>
+          <span class="tag orange">3 integraciones activas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <p class="section-label">Por qué NexFlow</p>
+    <h2 class="section-title">Todo lo que necesita<br>tu equipo, en un solo lugar</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Automatización sin código</h3>
+        <p>Crea flujos de trabajo potentes con IA. Sin una sola línea de código. En minutos, no meses.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h3>+150 integraciones</h3>
+        <p>Conecta Slack, Notion, HubSpot, GitHub y más. Tu stack actual, potenciado por NexFlow.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Analytics en tiempo real</h3>
+        <p>Visualiza el rendimiento de tu equipo y automatizaciones con dashboards listos para usar.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Seguridad enterprise</h3>
+        <p>Cifrado de extremo a extremo, SSO, y cumplimiento SOC 2 desde el día uno.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>Copilot de IA integrado</h3>
+        <p>Tu asistente que aprende de tu equipo. Sugiere, ejecuta y mejora continuamente.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌎</div>
+        <h3>Equipos distribuidos</h3>
+        <p>Colabora en tiempo real desde cualquier zona horaria. Sin fricción, sin caos.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 NexFlow Inc. · <a href="#">Privacidad</a> · <a href="#">Términos</a> · Hecho con ♥ para equipos que construyen el futuro</p>
+</footer>
+
+<script>
+  // ── CONFIGURA EMAILJS AQUÍ ──────────────────────────────────────────
+  // 1. Crea cuenta en https://www.emailjs.com/
+  // 2. Crea un Service (Gmail recomendado) → copia el Service ID
+  // 3. Crea un Template → usa el archivo email-template.html como referencia
+  // En el template de EmailJS pon: To: {{to_email}} | Subject: lo que quieras
+  // 4. Ve a Account > API Keys y copia tu Public Key
+  // Reemplaza los 3 valores de abajo:
+
+  const EMAILJS_PUBLIC_KEY = 'qLVnU2tFdml_5SPj2';
+  const EMAILJS_SERVICE_ID = 'service_8b3ocp7';
+  const EMAILJS_TEMPLATE_ID = 'template_96esc0k';
+
+  // ────────────────────────────────────────────────────────────────────
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  const form = document.getElementById('sub-form');
+  const input = document.getElementById('email-input');
+  const btn = document.getElementById('submit-btn');
+  const statusMsg = document.getElementById('status-msg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = input.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showStatus('error', 'Por favor ingresa un correo válido.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    statusMsg.className = 'status-msg';
+    statusMsg.style.display = 'none';
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: email,
+        to_name: email.split('@')[0],
+        reply_to: email,
+      });
+
+      showStatus('success', '🎉 ¡Listo! Revisa tu correo — te enviamos la confirmación.');
+      input.value = '';
+      btn.textContent = '¡Enviado! ✓';
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      showStatus('error', 'Hubo un error al enviar. Intenta de nuevo.');
+      btn.disabled = false;
+      btn.textContent = 'Suscribirme →';
+    }
+  });
+
+  function showStatus(type, msg) {
+    statusMsg.textContent = msg;
+    statusMsg.className = 'status-msg ' + type;
+  }
+</script>
+
+</body>
+</html>
